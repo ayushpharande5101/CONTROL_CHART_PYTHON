@@ -1,10 +1,24 @@
-byte_data = b'\x05\x00\x00\x00gfsgs\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+import streamlit as st
+import numpy as np
+import matplotlib.pyplot as plt
 
-# Locate the start and end positions of the string within the byte data
-start_index = 4  # Skip the first 4 bytes
-end_index = byte_data.index(b'\x00', start_index)  # Find the position of the first null byte after the start index
+# Generate some sample data
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
 
-# Extract the string from the byte data
-string_data = byte_data[start_index:end_index].decode('utf-8')
+# Function to plot based on selected range
+def plot_selected_range(start, end):
+    plt.plot(x, y)
+    plt.xlim(start, end)
+    plt.xlabel('x')
+    plt.ylabel('sin(x)')
+    plt.title('Plot of sin(x)')
+    st.pyplot()
 
-print(string_data)
+# Create custom slider for selecting range
+st.sidebar.markdown("### Select Range:")
+start_value = st.sidebar.slider("Start", min_value=min(x), max_value=max(x), value=min(x))
+end_value = st.sidebar.slider("End", min_value=min(x), max_value=max(x), value=max(x))
+
+# Plot based on selected range
+plot_selected_range(start_value, end_value)

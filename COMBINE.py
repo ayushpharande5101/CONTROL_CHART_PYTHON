@@ -39,9 +39,9 @@ def insert_data_R_Chart(cursor, values):
 def insert_data_ind(cursor, values):
     table_name = 'Control_chart.dbo.[SOLO_CHART]'
 
-    columns = ['SR_NO','DATETIME','BATCH','FINAL_WEIGHT','UCL','LCL','CL']
+    columns = ['SR_NO','DATETIME','BATCH','FINAL_WEIGHT','UCL','LCL','USL','LSL','CL']
 
-    SQLCommand = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES (?, ?, ? ,?, ?, ?, ?)"
+    SQLCommand = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES (?, ?, ?, ?, ? ,?, ?, ?, ?)"
 
     cursor.execute(SQLCommand, values)
     connection.commit()  # Commit changes to the database
@@ -66,7 +66,7 @@ count = 0
 while True:
     with PLC() as comm:
 
-        comm.IPAddress = '192.168.10.1'
+        comm.IPAddress = '192.168.10.30'
         print("TRUE")
 
         START_BIT = comm.Read('SPC_Trigget_Bit')
@@ -216,17 +216,18 @@ while True:
             CL = Z3.Value
             Positive_Tolerence = Z5.Value
             Negative_Tolerence = Z4.Value
-            LCL = CL - Negative_Tolerence
-            UCL = CL + Positive_Tolerence
-
+            LSL = CL - Negative_Tolerence
+            USL = CL + Positive_Tolerence
+            UCL = CL + 2
+            LCL = CL - 2
             DATETIME = datetime.datetime.now()
-            values = (i, DATETIME, BATCH, Dosing_Weight, UCL, LCL,CL)
+            values = (i, DATETIME, BATCH, Dosing_Weight,UCL,LCL, USL, LSL,CL)
 
             insert_data_ind(cursor, values)
             i = i + 1
             time.sleep(1)
 
-            if Dosing_Weight > UCL or Dosing_Weight < LCL:
+            if Dosing_Weight > USL or Dosing_Weight < LSL:
                 count = count + 1
                 Dateandtime = datetime.datetime.now()
                 if i % 10 == 0:
