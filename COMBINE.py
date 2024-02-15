@@ -90,7 +90,6 @@ while True:
             BATCH = BATCH1[start_index:end_index].decode('utf-8')
             PART_ID = PART_ID1.decode("utf-8")
 
-            time.sleep(2)
 
             DATA.append(Dosing_Weight)
             STANDARD_DEVIATION.append(Dosing_Weight)
@@ -158,7 +157,7 @@ while True:
 
                 print("DATA INSERTED IN X_CHART")
 
-                #==============================================#=====R-CHART=====#===============================================================
+#==============================================#=====R-CHART=====#===============================================================
 
                 if OVERALL_AVERAGE == 0 and OVERALL_RANGE == 0:
                     UCL_R_CHART = 0
@@ -189,11 +188,12 @@ while True:
                 print("DATA INSERTED IN R_CHART")
 
                 DATA.clear()
-                time.sleep(1)
 
             else:
                 print("Updating Values")
             j = j + 1
+
+#=======================================SPC_CHART================HISTOGRAM====================================================
 
         if START_BIT.Value == True:
             Z1 = comm.Read('SPC_Batch_No')
